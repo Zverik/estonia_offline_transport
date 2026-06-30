@@ -1,0 +1,40 @@
+name: estonia_offline_transport
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_map: ^8.2.0
+  flutter_riverpod: ^3.3.1
+  geolocator: ^14.0.3
+  latlong2: ^0.9.0
+  logging: ^1.0.2
+  mbtiles: ^0.4.2
+  shared_preferences: ^2.5.5
+  sqlite3_flutter_libs: ^0.5.41
+  vector_map_tiles: ^9.0.0-beta.8
+  vector_tile_renderer: ^6.1.0
+  vector_map_tiles_mbtiles:
+    git:
+      url: https://github.com/josxha/flutter_map_plugins.git
+      path: vector_map_tiles_mbtiles
+  gtfs_proto_flutter:
+    path: ../gtfs_proto_flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/estonia.mbtiles
+    - assets/estonia.gtp
+    - assets/liberty.json

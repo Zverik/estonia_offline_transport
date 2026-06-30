@@ -1,0 +1,41 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final locationProvider = NotifierProvider<LocationNotifier, LatLng>(
+  LocationNotifier.new,
+);
+
+class LocationNotifier extends Notifier<LatLng> {
+  static const kDefault = LatLng(59.43683, 24.75694);
+  static const kPref = 'location';
+
+  @override
+  LatLng build() {
+    _loadLast();
+    return kDefault;
+  }
+
+  void _loadLast() async {
+    final prefs = SharedPreferencesAsync();
+    final loc = await prefs.getStringList(kPref);
+    if (loc != null && loc.length == 2) {
+      final coords = loc
+          .map((e) => double.tryParse(e))
+          .whereType<double>()
+          .toList();
+      if (coords.length == 2 && state == kDefault) {
+        state = LatLng(coords[0], coords[1]);
+      }
+    }
+  }
+
+  void set(LatLng loc) async {
+    state = loc;
+    final prefs = SharedPreferencesAsync();
+    await prefs.setStringList(kPref, [
+      loc.latitude.toString(),
+      loc.longitude.toString(),
+    ]);
+  }
+}
