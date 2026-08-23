@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gtfs_proto_flutter/gtfs_proto_flutter.dart' as m;
+import 'package:gtfs_binary_dart/gtfs_binary_dart.dart' as m;
 
 class TransitIcon extends StatelessWidget {
   final m.Route route;
@@ -9,11 +9,11 @@ class TransitIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RoutePlace(
-      color: route.color,
+      color: Color(route.color).withValues(alpha: 1.0),
       number: route.name,
       isBold: true,
       icon: Icons.directions_bus_filled,
-      semantics: '${route.routeType.name} ${route.name}',
+      semantics: '${route.type.name} ${route.name}',
     );
   }
 }

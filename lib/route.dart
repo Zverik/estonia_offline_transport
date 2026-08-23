@@ -3,10 +3,10 @@ import 'package:estonia_offline_transport/widgets/stop_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gtfs_proto_flutter/gtfs_proto_flutter.dart';
+import 'package:gtfs_binary_dart/gtfs_binary_dart.dart';
 
 class RoutePage extends ConsumerStatefulWidget {
-  final SpecificTrip trip;
+  final Trip trip;
 
   const RoutePage(this.trip, {super.key});
 
@@ -22,7 +22,7 @@ class _RoutePageState extends ConsumerState<RoutePage> {
     final vector = ref.watch(vectorLayerProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Route ${widget.trip.route.name}'),
+        title: Text(widget.trip.route.longName ?? 'Route ${widget.trip.route.name}'),
         actions: [
           IconButton(
             onPressed: () {

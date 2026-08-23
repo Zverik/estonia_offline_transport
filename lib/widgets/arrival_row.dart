@@ -1,11 +1,11 @@
 import 'package:estonia_offline_transport/widgets/transit_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:gtfs_proto_flutter/gtfs_proto_flutter.dart' as m;
+import 'package:gtfs_binary_dart/gtfs_binary_dart.dart' as m;
 import 'package:intl/intl.dart' show DateFormat;
 
 class ArrivalRow extends StatefulWidget {
-  final m.Arrival first;
-  final m.Arrival? second;
+  final m.Departure first;
+  final m.Departure? second;
   final bool forceExactTime;
 
   const ArrivalRow(this.first, {this.second, this.forceExactTime = false});
@@ -19,7 +19,7 @@ class _ArrivalRowState extends State<ArrivalRow> {
 
   final tf = DateFormat.Hm();
 
-  String formatArrivalTime(BuildContext context, m.Arrival arrival) {
+  String formatArrivalTime(BuildContext context, m.Departure arrival) {
     final arrivesInSec = arrival.stop.departure.difference(DateTime.now()).inSeconds;
     final arrivalSec = arrivesInSec < 0 ? 0 : arrivesInSec;
     return arrivalSec > 700 || widget.forceExactTime

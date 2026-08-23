@@ -26,15 +26,19 @@ dependencies:
       path: vector_map_tiles_mbtiles
   gtfs_proto_flutter:
     path: ../gtfs_proto_flutter
+  gtfs_binary_dart:
+    path: ../gtfs_binary_dart
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  sqflite_common_ffi: ^2.3.7+1
+  libcompress: ^1.0.0
 
 flutter:
   uses-material-design: true
   assets:
     - assets/estonia.mbtiles
-    - assets/estonia.gtp
+    - assets/estonia.gtb
     - assets/liberty.json

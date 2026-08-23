@@ -1,8 +1,7 @@
 import 'package:estonia_offline_transport/widgets/stop_circle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:gtfs_proto_flutter/gtfs_proto_flutter.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:gtfs_binary_dart/gtfs_binary_dart.dart';
 
 class StopWithLabel extends StatelessWidget {
   final Stop stop;

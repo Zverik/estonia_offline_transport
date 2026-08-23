@@ -1,4 +1,9 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gtfs_proto_flutter/gtfs_proto_flutter.dart';
+import 'package:gtfs_binary_dart/gtfs_binary_dart.dart';
 
-final transitProvider = Provider((_) => GtfsProto('gtfs_proto.db'));
+final transitProvider = FutureProvider((_) async {
+  final data = await rootBundle.load('assets/estonia.gtb');
+  final reader = BinaryDataReader(data.buffer);
+  return GtfsBinary.read(reader).withFile(reader);
+});

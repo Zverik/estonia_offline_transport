@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:gtfs_proto_flutter/gtfs_proto_flutter.dart';
+import 'package:gtfs_binary_dart/gtfs_binary_dart.dart';
 import 'package:latlong2/latlong.dart';
 
 class ArrivalsPage extends ConsumerStatefulWidget {
@@ -24,22 +24,22 @@ class ArrivalsPage extends ConsumerStatefulWidget {
 enum DataStatus { missing, loading, loaded }
 
 class ArrivalDisplayedItem {
-  final Arrival first;
-  Arrival? second;
+  final Departure first;
+  Departure? second;
 
   ArrivalDisplayedItem(this.first);
   bool get hasSecond => second != null;
 }
 
 class _ArrivalsPageState extends ConsumerState<ArrivalsPage> {
-  DataStatus _status = DataStatus.missing;
+  DataStatus _status = DataStatus.loaded;
   final _mapController = MapController();
   LatLng? _center;
   String? _stage;
   List<Stop> _stops = [];
   String? _stopsError;
   Stop? _nearestStop;
-  List<Arrival> _arrivals = [];
+  List<Departure> _arrivals = [];
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _ArrivalsPageState extends ConsumerState<ArrivalsPage> {
   }
 
   void checkLoaded() async {
-    final feed = await ref.read(transitProvider).queries.feeds.getByName('feed');
+    final feed = 1; // await ref.read(transitProvider).queries.feeds.getByName('feed');
     if (feed != null) {
       setState(() {
         _status = DataStatus.loaded;
@@ -61,11 +61,13 @@ class _ArrivalsPageState extends ConsumerState<ArrivalsPage> {
       _status = DataStatus.loading;
     });
     final asset = await rootBundle.load("assets/estonia.gtp");
+    /*
     await ref.read(transitProvider).loadProto('feed', asset.buffer.asUint8List(), (status, perc) {
       setState(() {
         _stage = 'Loading... $perc% ${status.name}';
       });
     });
+    */
     setState(() {
       _status = DataStatus.loaded;
     });
@@ -78,7 +80,7 @@ class _ArrivalsPageState extends ConsumerState<ArrivalsPage> {
       if (camera.zoom < 13) {
         _stops = [];
       } else {
-        _stops = await ref.read(transitProvider).findStopsForBounds(bounds.southWest, bounds.northEast);
+        _stops = (await ref.read(transitProvider.future)).findStopsForBounds(bounds.southWest, bounds.northEast);
       }
     } on Exception catch (e) {
       setState(() {
@@ -118,12 +120,12 @@ class _ArrivalsPageState extends ConsumerState<ArrivalsPage> {
 
   List<ArrivalDisplayedItem> sortArrivals() {
     if (_arrivals.isEmpty) return [];
-    var byRoute = <FeedId, ArrivalDisplayedItem>{};
+    var byRoute = <int, ArrivalDisplayedItem>{};
     for (var arrival in _arrivals) {
-      if (!byRoute.containsKey(arrival.trip.route.id)) {
-        byRoute[arrival.trip.route.id] = ArrivalDisplayedItem(arrival);
+      if (!byRoute.containsKey(arrival.trip.route.feedId)) {
+        byRoute[arrival.trip.route.feedId] = ArrivalDisplayedItem(arrival);
       } else {
-        var item = byRoute[arrival.trip.route.id]!;
+        var item = byRoute[arrival.trip.route.feedId]!;
         if (!item.hasSecond) item.second = arrival;
       }
     }
@@ -141,7 +143,7 @@ class _ArrivalsPageState extends ConsumerState<ArrivalsPage> {
       return;
     }
 
-    final arrivals = await ref.read(transitProvider).findArrivals(stopId: stop.id, futureSeconds: 3600 * 2);
+    final arrivals = ref.read(transitProvider).requireValue.findDepartures(stop: stop, futureSeconds: 3600 * 2);
     setState(() {
       _arrivals = arrivals;
     });
