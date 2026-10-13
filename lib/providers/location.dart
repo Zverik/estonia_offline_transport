@@ -1,3 +1,4 @@
+import 'package:estonia_offline_transport/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,13 +8,12 @@ final locationProvider = NotifierProvider<LocationNotifier, LatLng>(
 );
 
 class LocationNotifier extends Notifier<LatLng> {
-  static const kDefault = LatLng(59.43683, 24.75694);
   static const kPref = 'location';
 
   @override
   LatLng build() {
     _loadLast();
-    return kDefault;
+    return kDefaultLocation;
   }
 
   void _loadLast() async {
@@ -24,7 +24,7 @@ class LocationNotifier extends Notifier<LatLng> {
           .map((e) => double.tryParse(e))
           .whereType<double>()
           .toList();
-      if (coords.length == 2 && state == kDefault) {
+      if (coords.length == 2 && state == kDefaultLocation) {
         state = LatLng(coords[0], coords[1]);
       }
     }

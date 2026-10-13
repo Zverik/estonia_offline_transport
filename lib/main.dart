@@ -12,7 +12,7 @@ class OfflineApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Estonia Offline Demo',
+      title: 'Swiss Offline Demo',
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),

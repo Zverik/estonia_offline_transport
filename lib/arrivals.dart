@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:estonia_offline_transport/constants.dart';
 import 'package:estonia_offline_transport/providers/transit.dart';
 import 'package:estonia_offline_transport/providers/vector_theme.dart';
 import 'package:estonia_offline_transport/route.dart';
@@ -198,9 +197,7 @@ class _ArrivalsPageState extends ConsumerState<ArrivalsPage> {
           return GestureDetector(
             child: ArrivalRow(a.first, second: a.second),
             onTap: () {
-              if (a.first.trip.path != null) {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => RoutePage(a.first.trip)));
-              }
+              Navigator.push(context, MaterialPageRoute(builder: (_) => RoutePage(a.first.trip)));
             },
           );
         },
@@ -221,7 +218,7 @@ class _ArrivalsPageState extends ConsumerState<ArrivalsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Estonia Offline Demo'),
+        title: Text('Swiss Offline Demo'),
         actions: [
           IconButton(
             icon: Icon(Icons.my_location),
@@ -237,7 +234,7 @@ class _ArrivalsPageState extends ConsumerState<ArrivalsPage> {
             child: FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                initialCenter: LatLng(58.35574, 26.71585),
+                initialCenter: kDefaultLocation,
                 initialZoom: 15,
                 minZoom: 8,
                 interactionOptions: InteractionOptions(

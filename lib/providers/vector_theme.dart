@@ -1,6 +1,7 @@
 import 'dart:convert' show json;
 import 'dart:io';
 
+import 'package:estonia_offline_transport/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mbtiles/mbtiles.dart';
@@ -16,9 +17,9 @@ final vectorLayerProvider = FutureProvider<VectorTileLayer>((ref) async {
     await appDir.create(recursive: true);
   }
 
-  final dbFile = File(path.join(appDir.path, 'estonia.mbtiles'));
+  final dbFile = File(path.join(appDir.path, '$kTiles.mbtiles'));
   if (!await dbFile.exists()) {
-    final mbtilesContent = await rootBundle.load('assets/estonia.mbtiles');
+    final mbtilesContent = await rootBundle.load('assets/$kTiles.mbtiles');
     final bytes = mbtilesContent.buffer.asUint8List();
     await dbFile.writeAsBytes(bytes, flush: true);
   }
@@ -30,5 +31,6 @@ final vectorLayerProvider = FutureProvider<VectorTileLayer>((ref) async {
   return VectorTileLayer(
     theme: theme,
     tileProviders: TileProviders({'openmaptiles': MbTilesVectorTileProvider(mbtiles: mbtiles)}),
+    layerMode: VectorTileLayerMode.vector,
   );
 });

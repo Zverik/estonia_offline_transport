@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gtfs_binary_dart/gtfs_binary_dart.dart';
+import 'package:latlong2/latlong.dart';
 
 class RoutePage extends ConsumerStatefulWidget {
   final Trip trip;
@@ -16,6 +17,17 @@ class RoutePage extends ConsumerStatefulWidget {
 
 class _RoutePageState extends ConsumerState<RoutePage> {
   bool showLabels = true;
+  List<LatLng> _path = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.trip.path != null) {
+      _path = widget.trip.path!;
+    } else {
+      _path = widget.trip.stops.map((s) => s.stop.location).toList();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +49,7 @@ class _RoutePageState extends ConsumerState<RoutePage> {
       ),
       body: FlutterMap(
         options: MapOptions(
-          initialCameraFit: CameraFit.bounds(bounds: LatLngBounds.fromPoints(widget.trip.path!)),
+          initialCameraFit: CameraFit.bounds(bounds: LatLngBounds.fromPoints(_path)),
           interactionOptions: InteractionOptions(
             flags: InteractiveFlag.all - InteractiveFlag.rotate - InteractiveFlag.flingAnimation,
           ),
@@ -49,7 +61,7 @@ class _RoutePageState extends ConsumerState<RoutePage> {
                 child: Center(child: Text(vector.error?.toString() ?? 'Loading the map...')),
               ),
           PolylineLayer(
-            polylines: [Polyline(points: widget.trip.path!, color: Colors.blue.shade800, strokeWidth: 3.0)],
+            polylines: [Polyline(points: _path, color: Colors.blue.shade800, strokeWidth: 3.0)],
           ),
           for (var stop in widget.trip.stops) StopWithLabel(stop.stop, showLabel: showLabels),
         ],
